@@ -1,5 +1,5 @@
 import Distribution.Simple.Utils (xargs)
-import Text.XHtml (height, abbr)
+import Text.XHtml (height, abbr, name)
 import Distribution.Compat.Lens (_1)
 {-# OPTIONS -Wall -Werror #-}
 doubleMe x = x + x
@@ -62,6 +62,7 @@ reverse' (x:xs) = reverse' xs ++ [x]
 zip' :: [a] -> [b] -> [(a,b)]
 zip' [] _ = []
 zip' _ [] = []
+
 zip' (x:xs) (y:ys) = (x,y) : zip' xs ys
 
 elem' :: (Eq a) => a -> [a] -> Bool
@@ -76,4 +77,29 @@ quickSort (x:xs) =
     let smallerOrEqual = [a | a <-xs, a<=x]
         larger = [a | a<-xs, a>x]
     in quickSort smallerOrEqual ++ [x] ++ quickSort larger
+
+multiTree :: Int -> Int -> Int -> Int
+multiTree x y z = x*y*z
+
+applyTwice :: (a->a) -> a -> a
+applyTwice f x =  f (f x)
+
+zipWith' :: (a->b->c) -> [a] -> [b] -> [c]
+zipWith' _ [] _ = []
+zipWith' _ _ [] = []
+zipWith' f (x:xs) (y:ys) = f x y : zipWith' f xs ys
+
+flip' :: (a->b->c) -> (b->a->c)
+flip' f = g
+    where g x y = f y x
+
+chain :: Int -> [Int]
+chain 1 = [1]
+chain n
+    | even n = n : chain (n `div` 2)
+    | otherwise = n : chain (n * 3 + 1)
+
+numLongChains :: Int
+numLongChains = length ( filter isLong (map chain [1..100]))
+    where isLong xs = length xs > 15
     
