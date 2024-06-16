@@ -15,7 +15,7 @@ lucky x = "Sorry, you are not lucky!"
 
 factorial :: Int -> Int
 factorial 0=1
-factorial n =n * factorial(n-1)
+factorial n =n * factorial (n-1)
 
 head' :: [a] -> a
 head' [] = error "error"
@@ -33,7 +33,7 @@ bmiTell weight height
  | otherwise = "dd"
 
 cylinder :: Double -> Double ->Double
-cylinder r h = 
+cylinder r h =
     let sideArea =2*pi*r*h
         topArea = pi * r^2
     in sideArea +2 *topArea
@@ -102,4 +102,11 @@ chain n
 numLongChains :: Int
 numLongChains = length ( filter isLong (map chain [1..100]))
     where isLong xs = length xs > 15
-    
+
+
+sum' :: (Num a) => [a] -> a
+sum' = foldl (+) 0
+
+map' :: (a->b) -> [a] -> [b]
+map' f xs = foldr (\x acc -> f x : acc) [] xs
+
