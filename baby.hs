@@ -1,6 +1,9 @@
 import Distribution.Simple.Utils (xargs)
 import Text.XHtml (height, abbr, name)
 import Distribution.Compat.Lens (_1)
+import Data.List
+import Data.Char
+
 {-# OPTIONS -Wall -Werror #-}
 doubleMe x = x + x
 doubleUs x y= x * 2 + y * 2
@@ -76,7 +79,8 @@ quickSort [] = []
 quickSort (x:xs) =
     let smallerOrEqual = [a | a <-xs, a<=x]
         larger = [a | a<-xs, a>x]
-    in quickSort smallerOrEqual ++ [x] ++ quickSort larger
+    in quickSort smallerOrEqual ++ [
+        x] ++ quickSort larger
 
 multiTree :: Int -> Int -> Int -> Int
 multiTree x y z = x*y*z
@@ -109,4 +113,22 @@ sum' = foldl (+) 0
 
 map' :: (a->b) -> [a] -> [b]
 map' f xs = foldr (\x acc -> f x : acc) [] xs
+
+sum'1 :: (Num a) => [a] ->a
+sum'1  = foldl (+) 0
+
+numUnique :: (Eq a) => [a] -> Int
+numUnique = length . nub
+
+isIn :: (Eq a) => [a] -> [a] -> Bool
+needle `isIn` haystuck = any(needle `isPrefixOf`) (tails haystuck)
+
+digitSum :: Int -> Int
+digitSum = sum . map digitToInt . show  
+
+findTo40 :: Maybe Int
+findTo40 = find (\x -> digitSum x == 40) [1..]
+
+findTo ::Int -> Maybe Int
+findTo n = find (\x -> digitSum x == n) [1..]
 
