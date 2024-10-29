@@ -41,6 +41,12 @@ cylinder r h =
         topArea = pi * r^2
     in sideArea +2 *topArea
 
+describelist :: [a] -> String
+describelist ls = "this list is " ++ case ls of 
+    [] -> "empty" 
+    [x] -> "a singleton list"
+    xs -> "a long list"
+
 maxium' :: (Ord a) => [a] -> a
 maxium' [] = error "maximum of empty list!"
 maxium' [x] = x
@@ -65,7 +71,6 @@ reverse' (x:xs) = reverse' xs ++ [x]
 zip' :: [a] -> [b] -> [(a,b)]
 zip' [] _ = []
 zip' _ [] = []
-
 zip' (x:xs) (y:ys) = (x,y) : zip' xs ys
 
 elem' :: (Eq a) => a -> [a] -> Bool
@@ -81,6 +86,7 @@ quickSort (x:xs) =
         larger = [a | a<-xs, a>x]
     in quickSort smallerOrEqual ++ [
         x] ++ quickSort larger
+
 
 multiTree :: Int -> Int -> Int -> Int
 multiTree x y z = x*y*z
@@ -107,7 +113,6 @@ numLongChains :: Int
 numLongChains = length ( filter isLong (map chain [1..100]))
     where isLong xs = length xs > 15
 
-
 sum' :: (Num a) => [a] -> a
 sum' = foldl (+) 0
 
@@ -120,6 +125,10 @@ sum'1  = foldl (+) 0
 numUnique :: (Eq a) => [a] -> Int
 numUnique = length . nub
 
+flip'2 :: (a->b->c)->b->a ->c
+flip'2 f = \x y -> f y x
+
+
 isIn :: (Eq a) => [a] -> [a] -> Bool
 needle `isIn` haystuck = any(needle `isPrefixOf`) (tails haystuck)
 
@@ -131,4 +140,3 @@ findTo40 = find (\x -> digitSum x == 40) [1..]
 
 findTo ::Int -> Maybe Int
 findTo n = find (\x -> digitSum x == n) [1..]
-
