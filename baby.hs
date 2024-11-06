@@ -1,8 +1,10 @@
 import Distribution.Simple.Utils (xargs)
-import Text.XHtml (height, abbr, name)
+import Text.XHtml (height, abbr, name, area)
 import Distribution.Compat.Lens (_1)
 import Data.List
 import Data.Char
+import qualified Data.Map as Map
+import Distribution.PackageDescription (mapTreeConds)
 
 {-# OPTIONS -Wall -Werror #-}
 doubleMe x = x + x
@@ -119,6 +121,12 @@ sum' = foldl (+) 0
 map' :: (a->b) -> [a] -> [b]
 map' f xs = foldr (\x acc -> f x : acc) [] xs
 
+elem'1 :: (Eq a) => a-> [a] -> Bool
+elem'1 y ys = foldr (\x acc -> if x == y then True else acc) False ys 
+
+foldreverse :: [a] -> [a]
+foldreverse = foldl (\acc x -> x : acc) []
+
 sum'1 :: (Num a) => [a] ->a
 sum'1  = foldl (+) 0
 
@@ -140,3 +148,44 @@ findTo40 = find (\x -> digitSum x == 40) [1..]
 
 findTo ::Int -> Maybe Int
 findTo n = find (\x -> digitSum x == n) [1..]
+
+foldFindeKey :: (Eq k) => k -> [(k,v)] -> Maybe v
+foldFindeKey key = foldr (\ (k,v) acc -> if key == k then Just v else acc) Nothing
+
+-- Circle
+data Shape = Circle Float Float Float | Rectangle Float Float Float Float 
+    deriving (Show)
+
+myarea :: Shape -> Float
+myarea (Circle _ _ r) = pi * r ^ 2
+myarea (Rectangle x1 y1 x2 y2) = (abs $ x2 - x1) * (abs $ y2 - y1)
+
+-- Record
+
+data Person = Person String String Int Float String String
+    deriving (Show)
+
+--Tree
+
+data Tree a = EmptyTree | Node a (Tree a) (Tree a) deriving (Show)
+
+mySingleton :: a -> Tree a
+mySingleton x = Node x EmptyTree EmptyTree
+
+treeInsert :: (Ord a) => a -> Tree a -> Tree a
+treeInsert x EmptyTree = mySingleton x
+treeInsert x (Node a left right)
+    | x == a = Node x left right
+    | x < a  = Node a (treeInsert x left) right
+    | x > a  = Node a left (treeInsert x right) 
+
+treeElem :: (Ord a) => a -> Tree a -> Bool
+treeElem x EmptyTree = False
+treeElem x (Node a left right)
+    | x == a = True
+    | x < a = treeElem x left
+    | x > a = treeElem x right
+
+instance Functor Tree where
+    fmap f EmptyTree = EmptyTree
+    fmap f (Node x left right) =  Node (f x) (fmap f left) (fmap f right)
